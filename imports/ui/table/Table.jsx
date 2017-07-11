@@ -4,10 +4,17 @@ import PropTypes from 'prop-types';
 import TableRow from './TableRow';
 import Letter from './Letter';
 
+import Loading from '../common/Loading';
+
 export default class Table extends Component
 {
   static propTypes = {
-    letterMatrix: PropTypes.array.isRequired
+    table: PropTypes.array,
+    selectedLetters: PropTypes.array,
+    highlightedLetters: PropTypes.array,
+
+    onLetterSelected: PropTypes.func.isRequired,
+    onMouseUp: PropTypes.func.isRequired
   };
   wordsTable;
 
@@ -19,10 +26,10 @@ export default class Table extends Component
   }
 
   rows() {
-    return this.props.letterMatrix.length;
+    return this.props.table ? this.props.table.length : 0;
   }
   cols() {
-    return this.props.letterMatrix[0].length;
+    return this.props.table ? this.props.table[0].length : 0;
   }
 
   componentDidMount() {
@@ -44,7 +51,12 @@ export default class Table extends Component
   }
 
   renderLetters() {
-    return this.props.letterMatrix.map((row, rowIdx) => (
+    const isInList = (list) => (row, col) => list && list.find(letter => letter.row === row && letter.col === col);
+    const isSelected = isInList(this.props.selectedLetters);
+    const isHighlighted = isInList(this.props.highlightedLetters);
+
+    if (!this.props.table) return <Loading />;
+    return this.props.table.map((row, rowIdx) => (
       <TableRow key={rowIdx}>
         {row.map((col, colIdx) =>
           <Letter
@@ -53,6 +65,10 @@ export default class Table extends Component
             row={rowIdx}
             col={colIdx}
             size={this.state.letterSize}
+
+            isSelected={isSelected(rowIdx, colIdx)}
+            isHighlighted={isHighlighted(rowIdx, colIdx)}
+            onSelected={letter => this.props.onLetterSelected(letter)}
           />
         )}
       </TableRow>
@@ -61,7 +77,11 @@ export default class Table extends Component
 
   render() {
     return (
-      <section className="words-table" ref={table => this.wordsTable = table}>
+      <section
+        className="words-table"
+        ref={table => this.wordsTable = table}
+        onMouseUp={this.props.onMouseUp}
+      >
         {this.renderLetters()}
       </section>
     );

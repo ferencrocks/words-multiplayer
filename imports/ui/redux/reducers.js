@@ -1,3 +1,7 @@
 import { combineReducers } from 'redux';
 
-export default combineReducers({});
+import { table } from './table/reducers';
+
+export default combineReducers({
+  table
+});
