@@ -1,0 +1,44 @@
+.screen-layout {
+  display: flex;
+  height: 100vh;
+
+  .content-main {
+    flex: 4;
+  }
+  .content-left {
+    flex: 1;
+    min-width: 250px;
+  }
+}
+
+.words-table {
+  height: 100%;
+
+  .table-row {
+    display: block;
+
+    .letter-box {
+      display: inline-block;
+
+      & > .table-letter {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border: 3px solid #ccc;
+        border-radius: 9px;
+        width: 95%;
+        height: 95%;
+
+        &.active {
+          background-color: #f0c095;
+        }
+
+        .table-letter-text {
+          flex: 1;
+          text-align: center;
+          user-select: none;
+        }
+      }
+    }
+  }
+}
